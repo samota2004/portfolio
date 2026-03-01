@@ -14,11 +14,22 @@ function Footer() {
         </p>
 
         {/* Right Social Links */}
-        <div className="flex gap-8 text-sm">
-          <a href="/" className="hover:text-gold transition">
+              <div className="flex gap-8 text-sm">
+          <a
+            href="https://github.com/samota2004"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
             GitHub
           </a>
-          <a href="/" className="hover:text-gold transition">
+
+          <a
+            href="https://linkedin.com/in/your-linkedin-username"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
             LinkedIn
           </a>
         </div>
