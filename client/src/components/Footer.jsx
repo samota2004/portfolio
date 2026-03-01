@@ -25,7 +25,7 @@ function Footer() {
           </a>
 
           <a
-            href="https://linkedin.com/in/your-linkedin-username"
+            href="https://linkedin.com/in/priyankasamota"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-yellow-400 transition"
