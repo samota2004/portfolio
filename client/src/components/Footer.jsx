@@ -15,10 +15,10 @@ function Footer() {
 
         {/* Right Social Links */}
         <div className="flex gap-8 text-sm">
-          <a href="#" className="hover:text-gold transition">
+          <a href="/" className="hover:text-gold transition">
             GitHub
           </a>
-          <a href="#" className="hover:text-gold transition">
+          <a href="/" className="hover:text-gold transition">
             LinkedIn
           </a>
         </div>
