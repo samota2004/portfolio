@@ -1,47 +1,4 @@
-import { useState, useEffect } from "react";
-
 function Resume() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [resume, setResume] = useState(null);
-
-  useEffect(() => {
-    const checkAdmin = () => {
-      setIsAdmin(localStorage.getItem("isAdmin") === "true");
-    };
-
-    checkAdmin();
-    window.addEventListener("storage", checkAdmin);
-
-    return () => {
-      window.removeEventListener("storage", checkAdmin);
-    };
-  }, []);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("resume");
-    if (saved) {
-      setResume(saved);
-    }
-  }, []);
-
-  const handleUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      localStorage.setItem("resume", reader.result);
-      setResume(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleDelete = () => {
-    localStorage.removeItem("resume");
-    setResume(null);
-  };
-
-  function Resume() {
   return (
     <section
       id="resume"
