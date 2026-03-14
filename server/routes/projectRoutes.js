@@ -11,7 +11,7 @@ const {
 } = require("../controllers/projectController");
 
 
-// 🔓 Public Route (sab dekh sakte hain)
+// 🔓 Public Route (sab users projects dekh sakte hain)
 router.get("/", getProjects);
 
 
