@@ -2,20 +2,20 @@ import { useState, useEffect } from "react";
 
 function Resume() {
   const [isAdmin, setIsAdmin] = useState(false);
-
-useEffect(() => {
-  const checkAdmin = () => {
-    setIsAdmin(localStorage.getItem("isAdmin") === "true");
-  };
-
-  checkAdmin();
-  window.addEventListener("storage", checkAdmin);
-
-  return () => {
-    window.removeEventListener("storage", checkAdmin);
-  };
-}, []);
   const [resume, setResume] = useState(null);
+
+  useEffect(() => {
+    const checkAdmin = () => {
+      setIsAdmin(localStorage.getItem("isAdmin") === "true");
+    };
+
+    checkAdmin();
+    window.addEventListener("storage", checkAdmin);
+
+    return () => {
+      window.removeEventListener("storage", checkAdmin);
+    };
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("resume");
@@ -42,21 +42,24 @@ useEffect(() => {
   };
 
   return (
-    <section className="bg-white px-24 py-32 text-center">
-      <h2 className="text-5xl font-serif mb-8">
+    <section
+      id="resume"
+      className="bg-white px-6 md:px-24 py-20 md:py-32 text-center"
+    >
+      <h2 className="text-3xl md:text-5xl font-serif mb-6 md:mb-8">
         Download My <span className="text-gold italic">Resume</span>
       </h2>
 
-      <p className="text-gray-600 mb-12">
+      <p className="text-gray-600 mb-8 md:mb-12 text-sm md:text-base">
         Get a detailed overview of my skills, projects, and experience.
       </p>
 
-      {/* Download Button (Visible to Everyone if resume exists) */}
+      {/* Download Button */}
       {resume && (
         <a
           href={resume}
           download="Priyanka_Samota_Resume.pdf"
-          className="bg-gold text-black px-10 py-4 tracking-wide hover:bg-[#C4A24F] transition"
+          className="bg-gold text-black px-6 md:px-10 py-3 md:py-4 tracking-wide hover:bg-[#C4A24F] transition"
         >
           DOWNLOAD RESUME ↓
         </a>
@@ -64,7 +67,8 @@ useEffect(() => {
 
       {/* Admin Controls */}
       {isAdmin && (
-        <div className="mt-10 space-x-4">
+        <div className="mt-8 md:mt-10 flex flex-wrap justify-center gap-4">
+          
           <label className="bg-black text-white px-6 py-2 cursor-pointer">
             Upload
             <input
@@ -83,6 +87,7 @@ useEffect(() => {
               Delete
             </button>
           )}
+
         </div>
       )}
     </section>
