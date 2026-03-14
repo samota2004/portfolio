@@ -4,18 +4,18 @@ function Certifications() {
   const [certifications, setCertifications] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
 
-useEffect(() => {
-  const checkAdmin = () => {
-    setIsAdmin(localStorage.getItem("isAdmin") === "true");
-  };
+  useEffect(() => {
+    const checkAdmin = () => {
+      setIsAdmin(localStorage.getItem("isAdmin") === "true");
+    };
 
-  checkAdmin();
-  window.addEventListener("storage", checkAdmin);
+    checkAdmin();
+    window.addEventListener("storage", checkAdmin);
 
-  return () => {
-    window.removeEventListener("storage", checkAdmin);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("storage", checkAdmin);
+    };
+  }, []);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("certifications"));
@@ -75,14 +75,17 @@ useEffect(() => {
   };
 
   return (
-    <section id="certifications" className="bg-white px-24 py-32">
-      <div className="flex justify-between items-center mb-16">
+    <section
+      id="certifications"
+      className="bg-white px-6 md:px-24 py-20 md:py-32"
+    >
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-16 gap-6">
         <div>
-          <p className="text-gold tracking-[3px] text-xs uppercase mb-6">
+          <p className="text-gold tracking-[3px] text-xs uppercase mb-4">
             Certifications
           </p>
 
-          <h2 className="text-5xl font-serif">
+          <h2 className="text-3xl md:text-5xl font-serif">
             Professional <span className="text-gold italic">Certifications</span>
           </h2>
         </div>
@@ -90,27 +93,27 @@ useEffect(() => {
         {isAdmin && (
           <button
             onClick={handleAdd}
-            className="bg-gold px-6 py-2 text-black"
+            className="bg-gold px-6 py-2 text-black w-fit"
           >
             + Add
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
         {certifications.map((item) => (
           <div
             key={item.id}
-            className="border p-8 shadow-sm relative group 
-                       hover:bg-[#C6A14A] 
+            className="border p-6 md:p-8 shadow-sm relative group
+                       hover:bg-[#C6A14A]
                        hover:border-[#C6A14A]
                        transition-all duration-300"
           >
-            <h3 className="text-xl font-semibold mb-3 group-hover:text-black">
+            <h3 className="text-lg md:text-xl font-semibold mb-2 group-hover:text-black">
               {item.title}
             </h3>
 
-            <p className="text-gray-600 group-hover:text-black">
+            <p className="text-gray-600 text-sm md:text-base group-hover:text-black">
               {item.org}
             </p>
 
