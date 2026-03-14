@@ -58,7 +58,7 @@ function Resume() {
       {resume && (
         <a
           href="/Priyanka_Samota_Resume"
-          download="Priyanka_Samota_Resume.pdf"
+          download
           className="bg-gold text-black px-6 md:px-10 py-3 md:py-4 tracking-wide hover:bg-[#C4A24F] transition"
         >
           DOWNLOAD RESUME ↓
