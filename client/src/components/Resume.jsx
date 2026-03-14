@@ -56,13 +56,14 @@ function Resume() {
 
       {/* Download Button */}
       {resume && (
-        <a
-          href="/Priyanka_Samota_Resume"
-          download
-          className="bg-gold text-black px-6 md:px-10 py-3 md:py-4 tracking-wide hover:bg-[#C4A24F] transition"
-        >
-          DOWNLOAD RESUME ↓
-        </a>
+     <a
+  href="/Priyanka_Samota_Resume.pdf"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="bg-gold text-black px-10 py-4 tracking-wide hover:bg-[#C4A24F] transition"
+>
+  DOWNLOAD RESUME ↓
+</a>
       )}
 
       {/* Admin Controls */}
