@@ -5,7 +5,6 @@ function Contact() {
   const [state, handleSubmit] = useForm("mjgedope");
   const formRef = useRef();
 
-  // ✅ Reset form after successful submission
   useEffect(() => {
     if (state.succeeded) {
       formRef.current.reset();
@@ -15,17 +14,17 @@ function Contact() {
   return (
     <section
       id="contact"
-      className="bg-[#0E0E0E] text-white px-24 py-32"
+      className="bg-[#0E0E0E] text-white px-6 md:px-24 py-20 md:py-32"
     >
-      <div className="grid grid-cols-2 gap-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
 
         {/* Left Content */}
         <div>
-          <p className="text-gold tracking-[3px] text-xs uppercase mb-6">
+          <p className="text-gold tracking-[3px] text-xs uppercase mb-4">
             Get In Touch
           </p>
 
-          <h2 className="text-6xl leading-tight mb-8">
+          <h2 className="text-3xl md:text-6xl leading-tight mb-6 md:mb-8">
             Let’s Build{" "}
             <span className="text-gold italic">
               Something
@@ -33,13 +32,13 @@ function Contact() {
             Together
           </h2>
 
-          <p className="text-gray-400 leading-relaxed mb-10">
+          <p className="text-gray-400 leading-relaxed mb-8 md:mb-10 text-sm md:text-base">
             Have a project in mind? I’m open to freelance
             opportunities, collaborations, and full-time
             positions. Let’s create something remarkable.
           </p>
 
-          <div className="space-y-4 text-gray-400">
+          <div className="space-y-3 md:space-y-4 text-gray-400 text-sm md:text-base">
             <p>📧 priyankasamota946@gmail.com</p>
             <p>📞 +91 6367232754</p>
             <p>🔗 https://www.linkedin.com/in/priyankasamota</p>
@@ -52,7 +51,7 @@ function Contact() {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="space-y-8"
+            className="space-y-6 md:space-y-8"
           >
 
             <input
@@ -103,14 +102,13 @@ function Contact() {
             <button
               type="submit"
               disabled={state.submitting}
-              className="mt-6 border border-gold text-gold px-8 py-3 hover:bg-gold hover:text-black transition"
+              className="mt-4 md:mt-6 border border-gold text-gold px-6 md:px-8 py-3 hover:bg-gold hover:text-black transition"
             >
               {state.submitting ? "Sending..." : "SEND MESSAGE →"}
             </button>
 
-            {/* ✅ Success Message BELOW button */}
             {state.succeeded && (
-              <p className="text-green-400 mt-4 animate-fadeIn">
+              <p className="text-green-400 mt-4">
                 ✅ Your message has been sent successfully.
               </p>
             )}
