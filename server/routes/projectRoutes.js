@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 
 const {
   getProjects,
@@ -15,7 +16,8 @@ router.get("/", getProjects);
 
 
 // 🔒 Admin Only Routes
-router.post("/", protect, addProject);
+router.post("/", protect, upload.single("image"), addProject);
+
 router.delete("/:id", protect, deleteProject);
 
 
