@@ -14,8 +14,7 @@ function Resume() {
 
       <a
         href="/Priyanka_Samota_Resume.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
+        download
         className="bg-gold text-black px-8 py-4 hover:bg-[#C4A24F] transition"
       >
         DOWNLOAD RESUME ↓
