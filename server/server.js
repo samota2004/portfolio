@@ -7,36 +7,40 @@ dotenv.config();
 
 const app = express();
 
+// Middleware
+app.use(express.json());
 
-// ✅ Proper CORS setup
 app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://portfolio-psi-eight-45.vercel.app"
+      "https://portfolio-psi-eight-45.vercel.app",
     ],
     credentials: true,
   })
 );
 
-
-// ✅ Middleware
-app.use(express.json());
-
-
-// ✅ Serve uploaded images
+// Static files
 app.use("/uploads", express.static("uploads"));
 
 
-// ✅ Routes
+// Routes
 const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
+const educationRoutes = require("./routes/educationRoutes");
+const skillRoutes = require("./routes/skillRoutes");
+const achievementRoutes = require("./routes/achievementRoutes");
+const certificationRoutes = require("./routes/certificationRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/education", educationRoutes);
+app.use("/api/skills", skillRoutes);
+app.use("/api/achievements", achievementRoutes);
+app.use("/api/certifications", certificationRoutes);
 
 
-// ✅ MongoDB Connection
+// MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -46,6 +50,4 @@ mongoose
       console.log("Server running on port 5000 🚀");
     });
   })
-  .catch((err) => {
-    console.error("MongoDB Error:", err);
-  });
+  .catch((err) => console.log(err));
