@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 
+const API_URL = "https://your-backend-url/api/education"; 
+// ⚠️ yaha apna backend URL daalna hai
+// example: https://portfolio-api.onrender.com/api/education
+
 function Education() {
   const [education, setEducation] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -10,43 +14,25 @@ function Education() {
     };
 
     checkAdmin();
-    window.addEventListener("storage", checkAdmin);
-
-    return () => {
-      window.removeEventListener("storage", checkAdmin);
-    };
   }, []);
 
+  // 🔹 Fetch Education from MongoDB
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("education"));
-    if (saved) {
-      setEducation(saved);
-    } else {
-      const defaultData = [
-        {
-          id: 1,
-          degree: "B.Tech in Computer Science",
-          college: "XYZ Engineering College, Rajasthan",
-          year: "2022 – 2026",
-          score: "8.5 / 10",
-          label: "CGPA",
-        },
-        {
-          id: 2,
-          degree: "Senior Secondary (12th)",
-          college: "ABC Senior Secondary School",
-          year: "2021",
-          score: "85%",
-          label: "Percentage",
-        },
-      ];
+    const fetchEducation = async () => {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        setEducation(data);
+      } catch (error) {
+        console.error("Error fetching education:", error);
+      }
+    };
 
-      setEducation(defaultData);
-      localStorage.setItem("education", JSON.stringify(defaultData));
-    }
+    fetchEducation();
   }, []);
 
-  const handleAdd = () => {
+  // 🔹 Add Education
+  const handleAdd = async () => {
     const degree = prompt("Enter Degree");
     const college = prompt("Enter College Name");
     const year = prompt("Enter Year");
@@ -56,7 +42,6 @@ function Education() {
     if (!degree || !college) return;
 
     const newItem = {
-      id: Date.now(),
       degree,
       college,
       year,
@@ -64,15 +49,33 @@ function Education() {
       label,
     };
 
-    const updated = [...education, newItem];
-    setEducation(updated);
-    localStorage.setItem("education", JSON.stringify(updated));
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newItem),
+      });
+
+      const data = await res.json();
+      setEducation([...education, data]);
+    } catch (error) {
+      console.error("Error adding education:", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    const updated = education.filter((item) => item.id !== id);
-    setEducation(updated);
-    localStorage.setItem("education", JSON.stringify(updated));
+  // 🔹 Delete Education
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
+
+      setEducation(education.filter((item) => item._id !== id));
+    } catch (error) {
+      console.error("Error deleting education:", error);
+    }
   };
 
   return (
@@ -104,7 +107,7 @@ function Education() {
       <div className="space-y-8 md:space-y-12">
         {education.map((item) => (
           <div
-            key={item.id}
+            key={item._id}
             className="border-l-4 border-gold pl-5 md:pl-8 relative group
                        hover:bg-[#C6A14A]
                        hover:border-[#C6A14A]
@@ -124,14 +127,12 @@ function Education() {
 
             <p className="text-gray-600 mt-3 text-sm md:text-base group-hover:text-black">
               {item.label}:{" "}
-              <span className="font-semibold">
-                {item.score}
-              </span>
+              <span className="font-semibold">{item.score}</span>
             </p>
 
             {isAdmin && (
               <button
-                onClick={() => handleDelete(item.id)}
+                onClick={() => handleDelete(item._id)}
                 className="absolute right-0 top-0 bg-red-500 text-white px-3 py-1 text-xs"
               >
                 Delete
