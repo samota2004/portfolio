@@ -2,20 +2,20 @@ import { useState, useEffect } from "react";
 
 function Achievements() {
   const [achievements, setAchievements] = useState([]);
- const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-useEffect(() => {
-  const checkAdmin = () => {
-    setIsAdmin(localStorage.getItem("isAdmin") === "true");
-  };
+  useEffect(() => {
+    const checkAdmin = () => {
+      setIsAdmin(localStorage.getItem("isAdmin") === "true");
+    };
 
-  checkAdmin();
-  window.addEventListener("storage", checkAdmin);
+    checkAdmin();
+    window.addEventListener("storage", checkAdmin);
 
-  return () => {
-    window.removeEventListener("storage", checkAdmin);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("storage", checkAdmin);
+    };
+  }, []);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("achievements"));
@@ -70,14 +70,17 @@ useEffect(() => {
   };
 
   return (
-    <section id="achievements" className="bg-cream px-24 py-32">
-      <div className="flex justify-between items-center mb-16">
+    <section
+      id="achievements"
+      className="bg-cream px-6 md:px-24 py-20 md:py-32"
+    >
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-16 gap-6">
         <div>
-          <p className="text-gold tracking-[3px] text-xs uppercase mb-6">
+          <p className="text-gold tracking-[3px] text-xs uppercase mb-4">
             Achievements
           </p>
 
-          <h2 className="text-5xl font-serif">
+          <h2 className="text-3xl md:text-5xl font-serif">
             Awards & <span className="text-gold italic">Activities</span>
           </h2>
         </div>
@@ -85,7 +88,7 @@ useEffect(() => {
         {isAdmin && (
           <button
             onClick={handleAdd}
-            className="bg-gold px-6 py-2 text-black"
+            className="bg-gold px-6 py-2 text-black w-fit"
           >
             + Add
           </button>
@@ -96,17 +99,16 @@ useEffect(() => {
         {achievements.map((item) => (
           <div
             key={item.id}
-            className="border-l-4 border-gold pl-6 relative group 
-                       hover:bg-[#C6A14A] 
+            className="border-l-4 border-gold pl-6 relative group
+                       hover:bg-[#C6A14A]
                        hover:border-[#C6A14A]
-                       transition-all duration-300 
-                       cursor-pointer"
+                       transition-all duration-300"
           >
-            <h3 className="text-xl font-semibold">
+            <h3 className="text-lg md:text-xl font-semibold">
               {item.title}
             </h3>
 
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm md:text-base">
               {item.desc}
             </p>
 
