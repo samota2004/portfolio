@@ -3,23 +3,22 @@ import { useState, useEffect } from "react";
 function Skills() {
   const [isAdmin, setIsAdmin] = useState(false);
 
-useEffect(() => {
-  const checkAdmin = () => {
-    setIsAdmin(localStorage.getItem("isAdmin") === "true");
-  };
+  useEffect(() => {
+    const checkAdmin = () => {
+      setIsAdmin(localStorage.getItem("isAdmin") === "true");
+    };
 
-  checkAdmin();
-  window.addEventListener("storage", checkAdmin);
+    checkAdmin();
+    window.addEventListener("storage", checkAdmin);
 
-  return () => {
-    window.removeEventListener("storage", checkAdmin);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("storage", checkAdmin);
+    };
+  }, []);
 
   const [skills, setSkills] = useState([]);
   const [newSkill, setNewSkill] = useState("");
 
-  // 🔹 Load from localStorage
   useEffect(() => {
     const savedSkills = JSON.parse(localStorage.getItem("skills"));
 
@@ -39,7 +38,6 @@ useEffect(() => {
     }
   }, []);
 
-  // ✅ Add Skill
   const addSkill = () => {
     if (newSkill.trim() !== "") {
       const updatedSkills = [...skills, newSkill];
@@ -49,7 +47,6 @@ useEffect(() => {
     }
   };
 
-  // ✅ Delete Skill
   const deleteSkill = (indexToDelete) => {
     const updatedSkills = skills.filter(
       (_, index) => index !== indexToDelete
@@ -61,15 +58,15 @@ useEffect(() => {
   return (
     <section
       id="skills"
-      className="bg-[#0E0E0E] text-white px-24 py-32"
+      className="bg-[#0E0E0E] text-white px-6 md:px-24 py-20 md:py-32"
     >
       {/* Heading */}
-      <div className="mb-20">
-        <p className="text-gold tracking-[3px] text-xs uppercase mb-6">
+      <div className="mb-12 md:mb-20">
+        <p className="text-gold tracking-[3px] text-xs uppercase mb-4">
           Skills & Expertise
         </p>
 
-        <h2 className="text-6xl leading-tight max-w-4xl">
+        <h2 className="text-3xl md:text-6xl leading-tight max-w-4xl">
           Crafting solutions with{" "}
           <span className="text-gold italic">
             modern technologies
@@ -78,22 +75,21 @@ useEffect(() => {
       </div>
 
       {/* Skills Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 mb-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12 mb-12 md:mb-20">
         {skills.map((skill, index) => (
           <div
             key={index}
             className="relative border border-gold 
-                       px-8 py-6 text-center tracking-wide
+                       px-6 md:px-8 py-5 md:py-6 text-center tracking-wide
                        hover:bg-gold hover:text-black
                        transition duration-300
-                       min-h-[70px]
+                       min-h-[60px] md:min-h-[70px]
                        flex items-center justify-center"
           >
-            <span className="font-medium text-lg">
+            <span className="font-medium text-base md:text-lg">
               {skill}
             </span>
 
-            {/* ❌ Delete Button (Admin Only) */}
             {isAdmin && (
               <button
                 onClick={() => deleteSkill(index)}
@@ -108,21 +104,20 @@ useEffect(() => {
         ))}
       </div>
 
-      {/* ➕ Add Skill (Admin Only) */}
+      {/* Add Skill */}
       {isAdmin && (
-        <div className="flex justify-center items-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <input
             type="text"
             placeholder="Add new skill"
             value={newSkill}
             onChange={(e) => setNewSkill(e.target.value)}
-            className="px-5 py-3 text-black w-72 outline-none"
+            className="px-5 py-3 text-black w-full sm:w-72 outline-none"
           />
 
           <button
             onClick={addSkill}
-            className="bg-gold text-black px-8 py-3 
-                       hover:bg-white transition"
+            className="bg-gold text-black px-8 py-3 hover:bg-white transition"
           >
             Add Skill
           </button>
