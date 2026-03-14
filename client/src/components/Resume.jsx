@@ -13,7 +13,7 @@ function Resume() {
       </p>
 
       <a
-        href="./Priyanka_Samota_Resume.pdf"
+        href="/Priyanka_Samota_Resume.pdf"
         download="Priyanka_Samota_Resume.pdf"
         className="bg-gold text-black px-8 py-4 hover:bg-[#C4A24F] transition"
       >
