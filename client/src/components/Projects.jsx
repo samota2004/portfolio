@@ -15,33 +15,37 @@ function Projects() {
     image: null
   });
 
-  // 🔹 Admin check
+  // Admin check
   useEffect(() => {
     setIsAdmin(localStorage.getItem("isAdmin") === "true");
   }, []);
 
-  // 🔹 Fetch projects
+  // Fetch projects
   const fetchProjects = async () => {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    setProjects(data);
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      setProjects(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
     fetchProjects();
   }, []);
 
-  // 🔹 Handle form change
+  // Form change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Handle image
+  // Image
   const handleImage = (e) => {
     setForm({ ...form, image: e.target.files[0] });
   };
 
-  // 🔹 Add project
+  // Add project
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -75,7 +79,7 @@ function Projects() {
     fetchProjects();
   };
 
-  // 🔹 Delete project
+  // Delete project
   const deleteProject = async (id) => {
     const token = localStorage.getItem("token");
 
@@ -92,11 +96,11 @@ function Projects() {
   return (
     <section id="projects" className="px-6 md:px-24 py-20 bg-cream">
 
-      <h2 className="text-4xl font-serif mb-12">
+      <h2 className="text-4xl font-serif mb-16">
         Featured <span className="text-gold italic">Projects</span>
       </h2>
 
-      {/* Admin Form */}
+      {/* ADMIN FORM */}
       {isAdmin && (
         <form onSubmit={handleSubmit} className="mb-16 space-y-4">
 
@@ -151,21 +155,32 @@ function Projects() {
         </form>
       )}
 
-      {/* Projects Grid */}
-      <div className="grid md:grid-cols-2 gap-10">
+      {/* PROJECT GRID */}
+      <div className="grid md:grid-cols-2 gap-12">
 
         {projects.map((project) => (
-          <div key={project._id} className="border bg-white">
 
-            {project.image && (
-              <img
-                src={`https://portfolio-kxuy.onrender.com${project.image}`}
-                alt={project.title}
-                className="w-full h-60 object-cover"
-              />
-            )}
+          <div key={project._id} className="border bg-white relative">
 
-            <div className="p-6">
+            {/* IMAGE */}
+            <div className="h-[260px] bg-black flex items-center justify-center overflow-hidden">
+
+              {project.image ? (
+                <img
+                  src={`https://portfolio-kxuy.onrender.com${project.image}`}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <h3 className="text-white opacity-40 text-xl">
+                  Project Image
+                </h3>
+              )}
+
+            </div>
+
+            {/* CONTENT */}
+            <div className="p-8">
 
               <h3 className="text-2xl font-serif mb-2">
                 {project.title}
@@ -175,20 +190,24 @@ function Projects() {
                 {project.description}
               </p>
 
-              <p className="text-sm text-gray-500 mb-4">
-                {project.tech?.join(", ")}
-              </p>
+              {/* TECH */}
+              {project.tech?.length > 0 && (
+                <p className="text-sm text-gray-500 mb-6">
+                  {project.tech.join(", ")}
+                </p>
+              )}
 
-              <div className="flex gap-4">
+              {/* BUTTONS */}
+              <div className="flex gap-6 mb-6">
 
                 {project.live && (
                   <a
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-gold px-4 py-2"
+                    className="bg-gold px-5 py-2 text-sm"
                   >
-                    Live
+                    LIVE →
                   </a>
                 )}
 
@@ -197,28 +216,49 @@ function Projects() {
                     href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="border border-gold px-4 py-2"
+                    className="border border-gold px-5 py-2 text-sm
+                               hover:bg-gold hover:text-black
+                               transition"
                   >
-                    GitHub
+                    GITHUB
                   </a>
                 )}
 
               </div>
 
-              {isAdmin && (
-                <button
-                  onClick={() => deleteProject(project._id)}
-                  className="mt-4 text-red-500"
-                >
-                  Delete
-                </button>
+              {/* IMAGE NAME */}
+              {isAdmin && project.image && (
+                <div className="flex justify-between text-xs text-gray-500">
+
+                  <span>
+                    Image:
+                  </span>
+
+                  <span>
+                    {project.image.split("/").pop()}
+                  </span>
+
+                </div>
               )}
 
             </div>
+
+            {/* DELETE BUTTON */}
+            {isAdmin && (
+              <button
+                onClick={() => deleteProject(project._id)}
+                className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 text-xs"
+              >
+                Delete
+              </button>
+            )}
+
           </div>
+
         ))}
 
       </div>
+
     </section>
   );
 }
