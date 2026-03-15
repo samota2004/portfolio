@@ -29,11 +29,6 @@ const projectSchema = new mongoose.Schema(
     github: {
       type: String,
       default: ""
-    },
-
-    image: {
-      type: String,
-      default: ""
     }
   },
   {
