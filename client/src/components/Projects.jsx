@@ -11,60 +11,39 @@ function Projects() {
     description: "",
     tech: "",
     live: "",
-    github: "",
-    image: null
+    github: ""
   });
 
-  // Admin check
   useEffect(() => {
     setIsAdmin(localStorage.getItem("isAdmin") === "true");
   }, []);
 
-  // Fetch projects
   const fetchProjects = async () => {
-    try {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      setProjects(data);
-    } catch (err) {
-      console.error(err);
-    }
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    setProjects(data);
   };
 
   useEffect(() => {
     fetchProjects();
   }, []);
 
-  // Form change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Image
-  const handleImage = (e) => {
-    setForm({ ...form, image: e.target.files[0] });
-  };
-
-  // Add project
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
 
-    const formData = new FormData();
-    formData.append("title", form.title);
-    formData.append("description", form.description);
-    formData.append("tech", form.tech);
-    formData.append("live", form.live);
-    formData.append("github", form.github);
-    formData.append("image", form.image);
-
     await fetch(API_URL, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
-      body: formData
+      body: JSON.stringify(form)
     });
 
     setForm({
@@ -72,14 +51,12 @@ function Projects() {
       description: "",
       tech: "",
       live: "",
-      github: "",
-      image: null
+      github: ""
     });
 
     fetchProjects();
   };
 
-  // Delete project
   const deleteProject = async (id) => {
     const token = localStorage.getItem("token");
 
@@ -100,7 +77,6 @@ function Projects() {
         Featured <span className="text-gold italic">Projects</span>
       </h2>
 
-      {/* ADMIN FORM */}
       {isAdmin && (
         <form onSubmit={handleSubmit} className="mb-16 space-y-4">
 
@@ -146,12 +122,6 @@ function Projects() {
             className="w-full p-3 border"
           />
 
-          <input 
-            type="file"
-            name = "image"
-            accept="image/*"
-            onChange={handleImage} />
-
           <button className="bg-gold px-6 py-3">
             Add Project
           </button>
@@ -159,95 +129,52 @@ function Projects() {
         </form>
       )}
 
-      {/* PROJECT GRID */}
+      {/* Project Cards */}
       <div className="grid md:grid-cols-2 gap-12">
 
         {projects.map((project) => (
+          <div key={project._id} className="border bg-white p-8 relative">
 
-          <div key={project._id} className="border bg-white relative">
+            <h3 className="text-2xl font-serif mb-2">
+              {project.title}
+            </h3>
 
-            {/* IMAGE */}
-            <div className="h-[260px] bg-black flex items-center justify-center overflow-hidden">
+            <p className="text-gray-600 mb-4">
+              {project.description}
+            </p>
 
-              {project.image ? (
-                <img
-                  src={`https://portfolio-kxuy.onrender.com${project.image}`}
-                  alt={project.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <h3 className="text-white opacity-40 text-xl">
-                  Project Image
-                </h3>
-              )}
-
-            </div>
-
-            {/* CONTENT */}
-            <div className="p-8">
-
-              <h3 className="text-2xl font-serif mb-2">
-                {project.title}
-              </h3>
-
-              <p className="text-gray-600 mb-4">
-                {project.description}
+            {project.tech?.length > 0 && (
+              <p className="text-sm text-gray-500 mb-6">
+                {project.tech.join(", ")}
               </p>
+            )}
 
-              {/* TECH */}
-              {project.tech?.length > 0 && (
-                <p className="text-sm text-gray-500 mb-6">
-                  {project.tech.join(", ")}
-                </p>
+            <div className="flex gap-6">
+
+              {project.live && (
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gold px-5 py-2 text-sm"
+                >
+                  LIVE →
+                </a>
               )}
 
-              {/* BUTTONS */}
-              <div className="flex gap-6 mb-6">
-
-                {project.live && (
-                  <a
-                    href={project.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-gold px-5 py-2 text-sm"
-                  >
-                    LIVE →
-                  </a>
-                )}
-
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border border-gold px-5 py-2 text-sm
-                               hover:bg-gold hover:text-black
-                               transition"
-                  >
-                    GITHUB
-                  </a>
-                )}
-
-              </div>
-
-              {/* IMAGE NAME */}
-              {isAdmin && project.image && (
-                <div className="flex justify-between text-xs text-gray-500">
-
-                  <span>
-                    Image:
-                  </span>
-
-                  <span>
-                    {project.image.split("/").pop()}
-                  </span>
-
-                </div>
+              {project.github && (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-gold px-5 py-2 text-sm"
+                >
+                  GITHUB
+                </a>
               )}
 
             </div>
 
-            {/* DELETE BUTTON */}
             {isAdmin && (
               <button
                 onClick={() => deleteProject(project._id)}
@@ -258,7 +185,6 @@ function Projects() {
             )}
 
           </div>
-
         ))}
 
       </div>
