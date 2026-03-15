@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const API_URL = "https://portfolio-kxuy.onrender.com/api/projects";
+
 function Projects() {
   const [projects, setProjects] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -10,41 +12,25 @@ function Projects() {
     };
 
     checkAdmin();
-    window.addEventListener("storage", checkAdmin);
-
-    return () => {
-      window.removeEventListener("storage", checkAdmin);
-    };
   }, []);
 
+  // 🔹 Fetch Projects from backend
   useEffect(() => {
-    const savedProjects = JSON.parse(localStorage.getItem("projects"));
-    if (savedProjects) {
-      setProjects(savedProjects);
-    } else {
-      const defaultProjects = [
-        {
-          id: 1,
-          title: "Luxury E-Commerce Platform",
-          description:
-            "A full-featured e-commerce website with authentication and Stripe integration.",
-          live: "#",
-          github: "#",
-          image: null,
-        },
-      ];
-      setProjects(defaultProjects);
-      localStorage.setItem("projects", JSON.stringify(defaultProjects));
-    }
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        setProjects(data);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
+      }
+    };
+
+    fetchProjects();
   }, []);
 
-  const handleDelete = (id) => {
-    const updated = projects.filter((p) => p.id !== id);
-    setProjects(updated);
-    localStorage.setItem("projects", JSON.stringify(updated));
-  };
-
-  const handleAdd = () => {
+  // 🔹 Add Project
+  const handleAdd = async () => {
     const title = prompt("Enter Project Title");
     const description = prompt("Enter Description");
     const live = prompt("Enter Live Project URL");
@@ -52,38 +38,43 @@ function Projects() {
 
     if (!title || !description) return;
 
-    const newProject = {
-      id: Date.now(),
-      title,
-      description,
-      live: live || "#",
-      github: github || "#",
-      image: null,
-    };
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          live,
+          github,
+        }),
+      });
 
-    const updated = [...projects, newProject];
-    setProjects(updated);
-    localStorage.setItem("projects", JSON.stringify(updated));
+      const data = await res.json();
+      setProjects([...projects, data]);
+    } catch (err) {
+      console.error("Error adding project:", err);
+    }
   };
 
-  const handleImageUpload = (e, id) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  // 🔹 Delete Project
+  const handleDelete = async (id) => {
+    try {
+      await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const updated = projects.map((p) =>
-        p.id === id ? { ...p, image: reader.result } : p
-      );
-      setProjects(updated);
-      localStorage.setItem("projects", JSON.stringify(updated));
-    };
-    reader.readAsDataURL(file);
+      setProjects(projects.filter((p) => p._id !== id));
+    } catch (err) {
+      console.error("Error deleting project:", err);
+    }
   };
 
   return (
     <section id="projects" className="bg-cream px-6 md:px-24 py-20 md:py-32">
-      
+
       <div className="mb-12 md:mb-20 flex flex-col md:flex-row md:justify-between md:items-center gap-6">
 
         <div>
@@ -104,20 +95,22 @@ function Projects() {
             + Add Project
           </button>
         )}
+
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
 
         {projects.map((project) => (
           <div
-            key={project.id}
+            key={project._id}
             className="border border-gray-300 bg-white relative"
           >
 
             <div className="h-[220px] md:h-[300px] bg-black flex items-center justify-center overflow-hidden">
+
               {project.image ? (
                 <img
-                  src={project.image}
+                  src={`https://portfolio-kxuy.onrender.com${project.image}`}
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
@@ -126,6 +119,7 @@ function Projects() {
                   Project Image
                 </h3>
               )}
+
             </div>
 
             <div className="p-6 md:p-8">
@@ -162,24 +156,11 @@ function Projects() {
 
               </div>
 
-              {isAdmin && (
-                <div className="mt-4">
-                  <label className="text-sm cursor-pointer text-gold">
-                    Upload Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleImageUpload(e, project.id)}
-                    />
-                  </label>
-                </div>
-              )}
             </div>
 
             {isAdmin && (
               <button
-                onClick={() => handleDelete(project.id)}
+                onClick={() => handleDelete(project._id)}
                 className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 text-xs"
               >
                 Delete
@@ -188,6 +169,7 @@ function Projects() {
 
           </div>
         ))}
+
       </div>
     </section>
   );
