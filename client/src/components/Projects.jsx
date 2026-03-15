@@ -14,7 +14,7 @@ function Projects() {
     checkAdmin();
   }, []);
 
-  // 🔹 Fetch Projects from backend
+  // 🔹 Fetch Projects
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -33,8 +33,8 @@ function Projects() {
   const handleAdd = async () => {
     const title = prompt("Enter Project Title");
     const description = prompt("Enter Description");
-    const live = prompt("Enter Live Project URL");
-    const github = prompt("Enter GitHub Repository URL");
+    const live = prompt("Enter Live URL");
+    const github = prompt("Enter GitHub URL");
 
     if (!title || !description) return;
 
