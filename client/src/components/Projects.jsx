@@ -14,23 +14,25 @@ function Projects() {
     checkAdmin();
   }, []);
 
-  // 🔹 Fetch Projects
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        setProjects(data);
-      } catch (err) {
-        console.error("Error fetching projects:", err);
-      }
-    };
+  // 🔹 Fetch projects from database
+  const fetchProjects = async () => {
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      setProjects(data);
+    } catch (err) {
+      console.error("Error fetching projects:", err);
+    }
+  };
 
+  useEffect(() => {
     fetchProjects();
   }, []);
 
   // 🔹 Add Project
   const handleAdd = async () => {
+    const token = localStorage.getItem("token");
+
     const title = prompt("Enter Project Title");
     const description = prompt("Enter Description");
     const live = prompt("Enter Live URL");
@@ -39,21 +41,23 @@ function Projects() {
     if (!title || !description) return;
 
     try {
-      const res = await fetch(API_URL, {
+      await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           title,
           description,
           live,
-          github,
-        }),
+          github
+        })
       });
 
-      const data = await res.json();
-      setProjects([...projects, data]);
+      // 🔥 database se fresh data load
+      fetchProjects();
+
     } catch (err) {
       console.error("Error adding project:", err);
     }
@@ -61,12 +65,18 @@ function Projects() {
 
   // 🔹 Delete Project
   const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
+
     try {
       await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
 
-      setProjects(projects.filter((p) => p._id !== id));
+      fetchProjects();
+
     } catch (err) {
       console.error("Error deleting project:", err);
     }
