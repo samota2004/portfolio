@@ -1,58 +1,68 @@
 import { useState, useEffect } from "react";
 
+const API_URL = "https://portfolio-kxuy.onrender.com/api/skills";
+
 function Skills() {
+  const [skills, setSkills] = useState([]);
+  const [newSkill, setNewSkill] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // 🔹 Check Admin
   useEffect(() => {
     const checkAdmin = () => {
       setIsAdmin(localStorage.getItem("isAdmin") === "true");
     };
 
     checkAdmin();
-    window.addEventListener("storage", checkAdmin);
-
-    return () => {
-      window.removeEventListener("storage", checkAdmin);
-    };
   }, []);
 
-  const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState("");
-
+  // 🔹 Fetch Skills from MongoDB
   useEffect(() => {
-    const savedSkills = JSON.parse(localStorage.getItem("skills"));
+    const fetchSkills = async () => {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        setSkills(data);
+      } catch (error) {
+        console.error("Error fetching skills:", error);
+      }
+    };
 
-    if (savedSkills) {
-      setSkills(savedSkills);
-    } else {
-      const defaultSkills = [
-        "HTML & CSS",
-        "JavaScript",
-        "React JS",
-        "Node JS",
-        "MongoDB",
-        "UI / UX Design",
-      ];
-      setSkills(defaultSkills);
-      localStorage.setItem("skills", JSON.stringify(defaultSkills));
-    }
+    fetchSkills();
   }, []);
 
-  const addSkill = () => {
-    if (newSkill.trim() !== "") {
-      const updatedSkills = [...skills, newSkill];
-      setSkills(updatedSkills);
-      localStorage.setItem("skills", JSON.stringify(updatedSkills));
+  // 🔹 Add Skill
+  const addSkill = async () => {
+    if (!newSkill.trim()) return;
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: newSkill }),
+      });
+
+      const data = await res.json();
+      setSkills([...skills, data]);
       setNewSkill("");
+    } catch (error) {
+      console.error("Error adding skill:", error);
     }
   };
 
-  const deleteSkill = (indexToDelete) => {
-    const updatedSkills = skills.filter(
-      (_, index) => index !== indexToDelete
-    );
-    setSkills(updatedSkills);
-    localStorage.setItem("skills", JSON.stringify(updatedSkills));
+  // 🔹 Delete Skill
+  const deleteSkill = async (id) => {
+    try {
+      await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
+
+      setSkills(skills.filter((skill) => skill._id !== id));
+    } catch (error) {
+      console.error("Error deleting skill:", error);
+    }
   };
 
   return (
@@ -76,9 +86,9 @@ function Skills() {
 
       {/* Skills Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12 mb-12 md:mb-20">
-        {skills.map((skill, index) => (
+        {skills.map((skill) => (
           <div
-            key={index}
+            key={skill._id}
             className="relative border border-gold 
                        px-6 md:px-8 py-5 md:py-6 text-center tracking-wide
                        hover:bg-gold hover:text-black
@@ -87,12 +97,12 @@ function Skills() {
                        flex items-center justify-center"
           >
             <span className="font-medium text-base md:text-lg">
-              {skill}
+              {skill.name}
             </span>
 
             {isAdmin && (
               <button
-                onClick={() => deleteSkill(index)}
+                onClick={() => deleteSkill(skill._id)}
                 className="absolute top-2 right-3 
                            text-xs text-red-400 
                            hover:text-white transition"
