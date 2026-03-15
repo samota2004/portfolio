@@ -185,6 +185,7 @@ function Projects() {
                   <a
                     href={project.live}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="bg-gold px-4 py-2"
                   >
                     Live
@@ -195,6 +196,7 @@ function Projects() {
                   <a
                     href={project.github}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="border border-gold px-4 py-2"
                   >
                     GitHub
