@@ -23,8 +23,7 @@ exports.addProject = async (req, res) => {
       description,
       tech: tech ? tech.split(",") : [],   // ⭐ string → array
       live,
-      github,
-      image: req.file ? `/uploads/${req.file.filename}` : ""
+      github
     });
 
     const savedProject = await project.save();
