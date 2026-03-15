@@ -146,7 +146,11 @@ function Projects() {
             className="w-full p-3 border"
           />
 
-          <input type="file" onChange={handleImage} />
+          <input 
+            type="file"
+            name = "image"
+            accept="image/*"
+            onChange={handleImage} />
 
           <button className="bg-gold px-6 py-3">
             Add Project
