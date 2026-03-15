@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const API_URL = "https://your-backend-url/api/education"; 
+const API_URL = "https://portfolio-kxuy.onrender.com/api/education"; 
 // ⚠️ yaha apna backend URL daalna hai
 // example: https://portfolio-api.onrender.com/api/education
 
